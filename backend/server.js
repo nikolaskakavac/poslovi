@@ -94,6 +94,11 @@ app.listen(PORT, () => {
 // Database sync and seed (non-blocking)
 const initDatabase = async () => {
   try {
+    // Log (bez lozinke)
+    const dbUrl = process.env.DATABASE_URL || 'Not set';
+    const maskedUrl = dbUrl.replace(/:[^:]*@/, ':***@');
+    console.log('Pokušaj konekcije na:', maskedUrl);
+    
     await db.sequelize.authenticate();
     await db.sequelize.sync({ alter: true });
     console.log('✅ Baza je sinhronizovana!');
@@ -102,7 +107,7 @@ const initDatabase = async () => {
       await seedDatabase();
     }
   } catch (error) {
-    console.error('Greška pri konekciji na bazu:', error);
+    console.error('Greška pri konekciji na bazu:', error.message);
   }
 };
 

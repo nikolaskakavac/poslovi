@@ -22,15 +22,23 @@ export default {
     logging: false
   },
   production: {
-  use_env_variable: 'DATABASE_URL',
-  dialect: 'postgres',
-  logging: false,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres',
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      },
+      connectTimeoutMillis: 10000,
+      statement_timeout: 10000
     }
   }
-}
   
 };

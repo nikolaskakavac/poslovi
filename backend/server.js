@@ -107,7 +107,10 @@ const initDatabase = async () => {
       await seedDatabase();
     }
   } catch (error) {
-    console.error('Greška pri konekciji na bazu:', error.message);
+    console.error('Greška pri konekciji na bazu:');
+    console.error('  Code:', error.code);
+    console.error('  Message:', error.message);
+    console.error('  Detail:', error.original?.message || 'N/A');
   }
 };
 

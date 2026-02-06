@@ -85,20 +85,27 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Database sync and server start
-db.sequelize.sync({ alter: true }).then(async () => {
-  console.log('✅ Baza je sinhronizovana!');
-  
-  // Seed bazu sa test podacima
-  await seedDatabase();
-  
-  app.listen(PORT, () => {
-    console.log(`Backend server pokrenut na http://localhost:${PORT}`);
-    console.log(`Okruženje: ${process.env.NODE_ENV || 'development'}`);
-  });
-}).catch(error => {
-  console.error('Greška pri konekciji na bazu:', error);
-  process.exit(1);
+// Server start (Render needs a listening port even if DB is down)
+app.listen(PORT, () => {
+  console.log(`Backend server pokrenut na http://localhost:${PORT}`);
+  console.log(`Okruženje: ${process.env.NODE_ENV || 'development'}`);
 });
+
+// Database sync and seed (non-blocking)
+const initDatabase = async () => {
+  try {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync({ alter: true });
+    console.log('✅ Baza je sinhronizovana!');
+
+    if (process.env.NODE_ENV !== 'production') {
+      await seedDatabase();
+    }
+  } catch (error) {
+    console.error('Greška pri konekciji na bazu:', error);
+  }
+};
+
+initDatabase();
 
 export default app;

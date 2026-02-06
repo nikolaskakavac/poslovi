@@ -33,7 +33,7 @@ export default {
       evict: 15000
     },
     dialectOptions: {
-      ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('render.com')
+      ssl: process.env.DATABASE_URL && (process.env.DATABASE_URL.includes('render.com') || process.env.DATABASE_URL.includes('supabase.co'))
         ? {
             require: true,
             rejectUnauthorized: false

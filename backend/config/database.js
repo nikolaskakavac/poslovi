@@ -24,20 +24,25 @@ export default {
   production: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    logging: false,
+    logging: (...args) => console.log(args),
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
-      idle: 10000
+      idle: 10000,
+      evict: 15000
     },
     dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      },
-      connectTimeoutMillis: 10000,
-      statement_timeout: 10000
+      ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('render.com')
+        ? {
+            require: true,
+            rejectUnauthorized: false
+          }
+        : false,
+      connectTimeoutMillis: 15000,
+      statement_timeout: 15000,
+      keepalives: 1,
+      keepalives_idle: 30
     }
   }
   

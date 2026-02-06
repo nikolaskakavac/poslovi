@@ -1,9 +1,10 @@
 import React from 'react';
-import { Mail, MapPin, Briefcase } from 'lucide-react'; 
+import { Link } from 'react-router-dom';
+import { Mail, Briefcase } from 'lucide-react'; 
 const Footer = () => {
   return (
    
-    <footer className="bg-slate-900 text-slate-200 py-16 px-4">
+    <footer className="bg-slate-950 text-slate-200 py-16 px-4">
       
     
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
@@ -11,10 +12,10 @@ const Footer = () => {
         
         <div className="flex flex-col items-center md:items-start space-y-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
+            <div className="p-2 bg-emerald-500 rounded-lg shadow-lg shadow-emerald-500/20">
                <Briefcase size={28} className="text-white" />
             </div>
-            <span className="text-3xl font-extrabold tracking-tight text-white">
+            <span className="text-3xl font-display font-extrabold tracking-tight text-white">
               Jobzee
             </span>
           </div>
@@ -27,16 +28,16 @@ const Footer = () => {
           <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Meni</h3>
           <ul className="flex flex-col gap-4 text-center">
             <li>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300 font-medium">Početna</a>
+              <Link to="/" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Početna</Link>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300 font-medium">Ponuda</a>
+              <Link to="/ponuda" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Ponuda</Link>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300 font-medium">Za Kompanije</a>
+              <Link to="/kompanije" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Za kompanije</Link>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300 font-medium">Blog & Saveti</a>
+              <Link to="/blog" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Blog i saveti</Link>
             </li>
           </ul>
         </div>
@@ -46,8 +47,8 @@ const Footer = () => {
           <div className="flex flex-col gap-4 text-slate-300 text-center md:text-right">
             
 
-            <a href="mailto:hello@jobzee.rs" className="flex items-center justify-center md:justify-end gap-3 hover:text-blue-400 transition-colors group">
-              <Mail size={20} className="text-blue-500 group-hover:animate-pulse" />
+            <a href="mailto:hello@jobzee.rs" className="flex items-center justify-center md:justify-end gap-3 hover:text-emerald-300 transition-colors group">
+              <Mail size={20} className="text-emerald-400 group-hover:animate-pulse" />
               <span className="font-medium">support@jobzee.rs</span>
             </a>
           </div>

@@ -97,11 +97,11 @@ const CompanySlider = () => {
             <h2 className="text-3xl font-bold text-slate-800 text-center mb-8">{current.name}</h2>
             
             <div className="flex flex-col gap-3 w-full">
-              <button className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-50 transition-all">
-                Prati <Heart size={20} />
+              <button className="w-full border-2 border-emerald-400 text-emerald-500 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-50 transition-all">
+                Zaprati kompaniju <Heart size={20} />
               </button>
-              <button className="w-full bg-[#002d72] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-900 transition-all">
-                Saznaj više <ExternalLink size={20} />
+              <button className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all">
+                Otvori profil <ExternalLink size={20} />
               </button>
             </div>
           </div>
@@ -150,7 +150,7 @@ const CompanySlider = () => {
             onClick={() => setCurrentIndex(index)}
             className={`p-4 bg-white rounded-2xl shadow-sm border-2 transition-all duration-300 flex items-center justify-center w-24 h-16 ${
               currentIndex === index 
-              ? 'border-blue-600 scale-110 shadow-md ring-4 ring-blue-50' 
+              ? 'border-emerald-500 scale-110 shadow-md ring-4 ring-emerald-50' 
               : 'border-transparent opacity-40 hover:opacity-100'
             }`}
           >

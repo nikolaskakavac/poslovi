@@ -1,34 +1,48 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const HeroVideo = () => {
-  return (
-    <div className='relative w-full h-[75vh] bg-black overflow-hidden mt-[-1px]'>
-        <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            className='absolute top-0 left-0 w-full h-full object-cover opacity-60'
-            src="/hero-video.mp4" 
-        />
+    return (
+        <section className="relative w-full h-[78vh] bg-black overflow-hidden">
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-70"
+                src="/hero-video.mp4"
+            />
 
-        <div className='absolute top-0 left-0 w-full h-full bg-black/40 z-10'></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/40 to-slate-950/80" />
 
-        <div className='relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4'>
-            <h1 className='text-5xl md:text-7xl font-extrabold mb-4 tracking-tight drop-shadow-2xl'>
-                Tražiš posao ili praksu?
-            </h1>
-            
-            <p className='text-2xl md:text-3xl text-blue-500 font-bold'>
-                Jobzee je pravo mesto za Vas
-            </p>
-            
-            <button className='mt-10  text-white px-12 py-4 rounded-full font-bold text-xl hover:scale-110 transition-all shadow-2xl shadow-blue-500/50'>
-                Prijavi se
-            </button>
-        </div>
-    </div>
-  )
+            <div className="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-6">
+                <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Najbrzi put do prakse</p>
+                <h1 className="mt-4 text-4xl md:text-6xl font-display font-bold leading-tight drop-shadow-2xl">
+                    Posao koji ima smisla.
+                    <br />
+                    Praksa koja te vodi dalje.
+                </h1>
+                <p className="mt-6 text-lg md:text-2xl text-slate-200 max-w-2xl">
+                    Jobzee povezuje studente, alumni i kompanije kroz proverene oglase i jasne prijave.
+                </p>
+
+                <div className="mt-10 flex flex-wrap gap-4 justify-center">
+                    <Link
+                        to="/"
+                        className="px-6 py-3 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition"
+                    >
+                        Pretrazi oglase
+                    </Link>
+                    <Link
+                        to="/ponuda"
+                        className="px-6 py-3 rounded-full border border-white/30 text-white hover:border-white/70 transition"
+                    >
+                        Pogledaj ponudu
+                    </Link>
+                </div>
+            </div>
+        </section>
+    )
 }
 
 export default HeroVideo

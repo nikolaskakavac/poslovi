@@ -24,7 +24,7 @@ export default {
   production: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    logging: (...args) => console.log(args),
+    logging: false,
     pool: {
       max: 5,
       min: 0,
@@ -33,16 +33,12 @@ export default {
       evict: 15000
     },
     dialectOptions: {
-      ssl: process.env.DATABASE_URL && (process.env.DATABASE_URL.includes('render.com') || process.env.DATABASE_URL.includes('supabase.co'))
-        ? {
-            require: true,
-            rejectUnauthorized: false
-          }
-        : false,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      },
       connectTimeoutMillis: 15000,
-      statement_timeout: 15000,
-      keepalives: 1,
-      keepalives_idle: 30
+      statement_timeout: 15000
     }
   }
   

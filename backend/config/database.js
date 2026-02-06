@@ -26,19 +26,22 @@ export default {
     dialect: 'postgres',
     logging: false,
     pool: {
-      max: 5,
+      max: 3,
       min: 0,
-      acquire: 30000,
-      idle: 10000,
-      evict: 15000
+      acquire: 60000,
+      idle: 30000
     },
     dialectOptions: {
       ssl: {
         require: true,
         rejectUnauthorized: false
       },
-      connectTimeoutMillis: 15000,
-      statement_timeout: 15000
+      keepAlive: true,
+      connectTimeout: 60000
+    },
+    retry: {
+      max: 3,
+      timeout: 5000
     }
   }
   

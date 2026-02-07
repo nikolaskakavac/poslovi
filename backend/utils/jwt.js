@@ -1,10 +1,15 @@
 import jwt from 'jsonwebtoken';
 
 export const generateToken = (id, email, role) => {
+  const jwtSecret = process.env.JWT_SECRET || 'your_jwt_secret_key_fallback';
+  const jwtExpire = process.env.JWT_EXPIRE || '7d';
+  
+  console.log('🎫 Generating JWT with expiresIn:', jwtExpire);
+  
   return jwt.sign(
     { id, email, role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRE }
+    jwtSecret,
+    { expiresIn: jwtExpire }
   );
 };
 

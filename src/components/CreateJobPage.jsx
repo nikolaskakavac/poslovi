@@ -86,12 +86,16 @@ export default function CreateJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white pt-24 pb-20">
-      <div className="max-w-5xl mx-auto px-6">
+    <div className="min-h-screen bg-slate-950 text-white pt-24 pb-20">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#0f766e_0%,transparent_50%)] opacity-40 pointer-events-none" />
+      <div className="absolute top-20 right-10 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
+      
+      <div className="relative max-w-5xl mx-auto px-6">
         {/* Header */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8 font-semibold transition"
+          className="flex items-center gap-2 text-slate-300 hover:text-white mb-8 font-semibold transition"
         >
           <ArrowLeft size={20} />
           Nazad
@@ -100,11 +104,12 @@ export default function CreateJobPage() {
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-full bg-emerald-400/20 flex items-center justify-center">
-              <Briefcase className="text-emerald-600" size={24} />
+              <Briefcase className="text-emerald-400" size={24} />
             </div>
             <div>
-              <h1 className="text-4xl font-display font-bold text-slate-950">Postavi Novi Oglas</h1>
-              <p className="text-slate-600 mt-1">
+              <p className="text-amber-300 font-semibold tracking-widest uppercase text-xs">Novi Oglas</p>
+              <h1 className="text-4xl font-display font-bold text-white mt-1">Postavi Novi Oglas</h1>
+              <p className="text-slate-300 mt-1">
                 Kreiraj oglas za posao i pronađi idealne kandidate
               </p>
             </div>
@@ -114,26 +119,26 @@ export default function CreateJobPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Form Section */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-lg border border-slate-100 p-8">
+            <div className="bg-slate-900/60 rounded-3xl border border-white/10 p-8 backdrop-blur-sm">
               {error && (
-                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex gap-3">
-                  <AlertCircle className="text-red-600 flex-shrink-0" size={20} />
-                  <p className="text-red-700 font-medium">{error}</p>
+                <div className="mb-6 p-4 bg-red-500/10 border-l-4 border-red-500 rounded-lg flex gap-3">
+                  <AlertCircle className="text-red-400 flex-shrink-0" size={20} />
+                  <p className="text-red-300 font-medium">{error}</p>
                 </div>
               )}
 
               {success && (
-                <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex gap-3">
-                  <CheckCircle className="text-green-600 flex-shrink-0" size={20} />
-                  <p className="text-green-700 font-medium">{success}</p>
+                <div className="mb-6 p-4 bg-emerald-500/10 border-l-4 border-emerald-500 rounded-lg flex gap-3">
+                  <CheckCircle className="text-emerald-400 flex-shrink-0" size={20} />
+                  <p className="text-emerald-300 font-medium">{success}</p>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Naslov Oglasa * <span className="text-xs text-slate-500">{formData.title.length}/100</span>
+                  <label className="block text-sm font-semibold text-slate-200 mb-2">
+                    Naslov Oglasa * <span className="text-xs text-slate-400">{formData.title.length}/100</span>
                   </label>
                   <input
                     type="text"
@@ -142,15 +147,15 @@ export default function CreateJobPage() {
                     value={formData.title}
                     onChange={handleInputChange}
                     maxLength="100"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                   />
-                  <p className="text-xs text-slate-500 mt-1">Budi jasan i upečatljiv</p>
+                  <p className="text-xs text-slate-400 mt-1">Budi jasan i upečatljiv</p>
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Opis Oglasa * <span className="text-xs text-slate-500">{formData.description.length}/5000</span>
+                  <label className="block text-sm font-semibold text-slate-200 mb-2">
+                    Opis Oglasa * <span className="text-xs text-slate-400">{formData.description.length}/5000</span>
                   </label>
                   <textarea
                     name="description"
@@ -164,31 +169,31 @@ export default function CreateJobPage() {
                     onChange={handleInputChange}
                     rows="6"
                     maxLength="5000"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                   />
                 </div>
 
                 {/* Category & Location */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Kategorija *
                     </label>
                     <select
                       name="category"
                       value={formData.category}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     >
-                      <option value="">Izaberi kategoriju...</option>
+                      <option value="" className="bg-slate-900">Izaberi kategoriju...</option>
                       {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
+                        <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Lokacija *
                     </label>
                     <input
@@ -197,7 +202,7 @@ export default function CreateJobPage() {
                       placeholder="npr. Beograd, Remote, Novi Sad"
                       value={formData.location}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     />
                   </div>
                 </div>
@@ -205,33 +210,33 @@ export default function CreateJobPage() {
                 {/* Job Type & Experience Level */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Tip Angažmana
                     </label>
                     <select
                       name="jobType"
                       value={formData.jobType}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     >
                       {jobTypes.map(type => (
-                        <option key={type} value={type}>{type}</option>
+                        <option key={type} value={type} className="bg-slate-900">{type}</option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Nivo Iskustva
                     </label>
                     <select
                       name="experienceLevel"
                       value={formData.experienceLevel}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     >
                       {experienceLevels.map(level => (
-                        <option key={level} value={level}>{level}</option>
+                        <option key={level} value={level} className="bg-slate-900">{level}</option>
                       ))}
                     </select>
                   </div>
@@ -240,7 +245,7 @@ export default function CreateJobPage() {
                 {/* Salary & Deadline */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Plata (EUR, opciono)
                     </label>
                     <input
@@ -249,12 +254,12 @@ export default function CreateJobPage() {
                       placeholder="npr. 1500"
                       value={formData.salary}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-200 mb-2">
                       Rok za Prijavu (opciono)
                     </label>
                     <input
@@ -262,14 +267,14 @@ export default function CreateJobPage() {
                       name="deadline"
                       value={formData.deadline}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                     />
                   </div>
                 </div>
 
                 {/* Required Skills */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  <label className="block text-sm font-semibold text-slate-200 mb-2">
                     Potrebne Veštine (opciono)
                   </label>
                   <textarea
@@ -279,32 +284,32 @@ npr. React, Node.js, PostgreSQL, Git, Docker, AWS"
                     value={formData.requiredSkills}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                   />
                 </div>
 
                 {/* Submit Button */}
-                <div className="pt-6 border-t border-slate-100 flex gap-4">
+                <div className="pt-6 border-t border-white/10 flex gap-4">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-6 py-3 rounded-full bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-6 py-3 rounded-full bg-emerald-400 text-slate-900 font-bold hover:bg-emerald-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? '⏳ Učitavanje...' : '✅ Postavi Oglas'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowPreview(!showPreview)}
-                    className="px-6 py-3 rounded-full border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition"
+                    className="px-6 py-3 rounded-full border border-white/20 text-white font-semibold hover:border-white/60 hover:bg-white/5 transition"
                   >
                     👁️ Pregled
                   </button>
                 </div>
               </form>
 
-              <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
-                <p className="text-sm text-blue-700">
-                  <span className="font-semibold">💡 Savjet:</span> Napiši detaljno i jasno kako biste privukli prave kandidate. Oglas će biti moderiran prije nego što bude javno vidljiv.
+              <div className="mt-6 p-4 bg-emerald-500/10 border-l-4 border-emerald-400 rounded-lg">
+                <p className="text-sm text-slate-300">
+                  <span className="font-semibold text-emerald-300">💡 Savjet:</span> Napiši detaljno i jasno kako biste privukli prave kandidate. Oglas će biti moderiran prije nego što bude javno vidljiv.
                 </p>
               </div>
             </div>
@@ -312,29 +317,29 @@ npr. React, Node.js, PostgreSQL, Git, Docker, AWS"
 
           {/* Preview Section */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white rounded-3xl shadow-lg border border-slate-100 p-6">
-              <h3 className="text-lg font-bold text-slate-950 mb-4">📋 Pregled</h3>
+            <div className="sticky top-24 bg-slate-900/60 rounded-3xl border border-white/10 p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-bold text-white mb-4">📋 Pregled</h3>
               
               <div className="space-y-4 text-sm">
                 <div>
-                  <p className="text-slate-500 text-xs">NASLOV</p>
-                  <p className="font-bold text-slate-950">{formData.title || '(Nije uneseno)'}</p>
+                  <p className="text-slate-400 text-xs mb-1">NASLOV</p>
+                  <p className="font-bold text-white">{formData.title || '(Nije uneseno)'}</p>
                 </div>
 
                 <div>
-                  <p className="text-slate-500 text-xs">OSNOVNO</p>
+                  <p className="text-slate-400 text-xs mb-2">OSNOVNO</p>
                   <div className="space-y-2">
-                    <p className="flex items-center gap-2 text-slate-700">
-                      <MapPin size={16} className="text-emerald-500" />
+                    <p className="flex items-center gap-2 text-slate-300">
+                      <MapPin size={16} className="text-emerald-400" />
                       {formData.location || '(Nije uneseno)'}
                     </p>
-                    <p className="flex items-center gap-2 text-slate-700">
-                      <Briefcase size={16} className="text-emerald-500" />
+                    <p className="flex items-center gap-2 text-slate-300">
+                      <Briefcase size={16} className="text-emerald-400" />
                       {formData.jobType}
                     </p>
                     {formData.salary && (
-                      <p className="flex items-center gap-2 text-slate-700">
-                        <DollarSign size={16} className="text-emerald-500" />
+                      <p className="flex items-center gap-2 text-slate-300">
+                        <DollarSign size={16} className="text-emerald-400" />
                         €{formData.salary}
                       </p>
                     )}
@@ -342,23 +347,23 @@ npr. React, Node.js, PostgreSQL, Git, Docker, AWS"
                 </div>
 
                 <div>
-                  <p className="text-slate-500 text-xs">OPIS</p>
-                  <p className="text-slate-700 line-clamp-3">
+                  <p className="text-slate-400 text-xs mb-1">OPIS</p>
+                  <p className="text-slate-300 line-clamp-3">
                     {formData.description || '(Nije uneseno)'}
                   </p>
                 </div>
 
                 {formData.requiredSkills && (
                   <div>
-                    <p className="text-slate-500 text-xs">VEŠTINE</p>
+                    <p className="text-slate-400 text-xs mb-2">VEŠTINE</p>
                     <div className="flex flex-wrap gap-2">
                       {formData.requiredSkills.split(',').filter(s => s.trim()).slice(0, 3).map((skill, idx) => (
-                        <span key={idx} className="bg-emerald-100 text-emerald-700 text-xs rounded-full px-2 py-1">
+                        <span key={idx} className="bg-emerald-400/20 text-emerald-300 text-xs rounded-full px-2 py-1 border border-emerald-400/30">
                           {skill.trim()}
                         </span>
                       ))}
                       {formData.requiredSkills.split(',').filter(s => s.trim()).length > 3 && (
-                        <span className="text-slate-500 text-xs">+{formData.requiredSkills.split(',').filter(s => s.trim()).length - 3} više</span>
+                        <span className="text-slate-400 text-xs">+{formData.requiredSkills.split(',').filter(s => s.trim()).length - 3} više</span>
                       )}
                     </div>
                   </div>

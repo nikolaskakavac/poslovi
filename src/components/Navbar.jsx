@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Briefcase, FileText, UserCircle, LogOut, Settings } from 'lucide-react';
 import AuthModal from './AuthModal';
 import { useAuth } from '../context/AuthContext';
 
@@ -59,9 +59,10 @@ const Navbar = () => {
                                 {(user?.role === 'student' || user?.role === 'alumni') && (
                                     <Link
                                         to="/my-applications"
-                                        className="hidden sm:inline-flex px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-slate-500 transition"
+                                        className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 transition"
                                     >
-                                        📨 Aplikacije
+                                        <FileText size={16} />
+                                        Aplikacije
                                     </Link>
                                 )}
                                 
@@ -69,19 +70,21 @@ const Navbar = () => {
                                     <>
                                         <Link
                                             to="/applications"
-                                            className="hidden sm:inline-flex px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-slate-500 transition"
+                                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 transition"
                                         >
-                                            📨 Aplikacije
+                                            <FileText size={16} />
+                                            Aplikacije
                                         </Link>
                                         <Link
                                             to="/my-jobs"
-                                            className="hidden sm:inline-flex px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-slate-500 transition"
+                                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 transition"
                                         >
-                                            📋 Moji oglasi
+                                            <Briefcase size={16} />
+                                            Moji oglasi
                                         </Link>
                                         <Link
                                             to="/create-job"
-                                            className="hidden sm:inline-flex px-4 py-2 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition"
+                                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition shadow-sm"
                                         >
                                             Postavi oglas
                                         </Link>
@@ -92,13 +95,14 @@ const Navbar = () => {
                                     <>
                                         <Link
                                             to="/my-jobs"
-                                            className="hidden sm:inline-flex px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-slate-500 transition"
+                                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 transition"
                                         >
-                                            📋 Moji oglasi
+                                            <Briefcase size={16} />
+                                            Moji oglasi
                                         </Link>
                                         <Link
                                             to="/create-job"
-                                            className="hidden sm:inline-flex px-4 py-2 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition"
+                                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition shadow-sm"
                                         >
                                             Postavi oglas
                                         </Link>
@@ -108,23 +112,26 @@ const Navbar = () => {
                                 {user?.role === 'admin' && (
                                     <Link
                                         to="/admin-console"
-                                        className="hidden sm:inline-flex px-4 py-2 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition text-xs"
+                                        className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition text-xs shadow-sm"
                                     >
-                                        🛠️ Admin
+                                        <Settings size={16} />
+                                        Admin
                                     </Link>
                                 )}
 
                                 <Link
                                     to="/profile"
-                                    className="px-4 py-2 rounded-full bg-slate-200 text-slate-900 font-semibold hover:bg-slate-300 transition"
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-200 text-slate-900 font-semibold hover:bg-slate-300 transition"
                                 >
+                                    <UserCircle size={16} />
                                     {user?.firstName || 'Profil'}
                                 </Link>
                                 
                                 <button
                                     onClick={handleLogout}
-                                    className="px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition"
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition"
                                 >
+                                    <LogOut size={16} />
                                     Odjava
                                 </button>
                             </>
@@ -160,6 +167,20 @@ const Navbar = () => {
                             {isAuthenticated() ? (
                                 <>
                                     <Link
+                                        to="/"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Početna
+                                    </Link>
+                                    <Link
+                                        to="/blog"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Blog
+                                    </Link>
+                                    <Link
                                         to="/jobs"
                                         onClick={closeMobileMenu}
                                         className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
@@ -171,9 +192,10 @@ const Navbar = () => {
                                         <Link
                                             to="/my-applications"
                                             onClick={closeMobileMenu}
-                                            className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
                                         >
-                                            📨 Moje aplikacije
+                                            <FileText size={18} />
+                                            Moje aplikacije
                                         </Link>
                                     )}
 
@@ -182,21 +204,23 @@ const Navbar = () => {
                                             <Link
                                                 to="/applications"
                                                 onClick={closeMobileMenu}
-                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
                                             >
-                                                📨 Pregled aplikacija
+                                                <FileText size={18} />
+                                                Pregled aplikacija
                                             </Link>
                                             <Link
                                                 to="/my-jobs"
                                                 onClick={closeMobileMenu}
-                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
                                             >
-                                                📋 Moji oglasi
+                                                <Briefcase size={18} />
+                                                Moji oglasi
                                             </Link>
                                             <Link
                                                 to="/create-job"
                                                 onClick={closeMobileMenu}
-                                                className="block w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
+                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
                                             >
                                                 Postavi oglas
                                             </Link>
@@ -208,14 +232,15 @@ const Navbar = () => {
                                             <Link
                                                 to="/my-jobs"
                                                 onClick={closeMobileMenu}
-                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
                                             >
-                                                📋 Moji oglasi
+                                                <Briefcase size={18} />
+                                                Moji oglasi
                                             </Link>
                                             <Link
                                                 to="/create-job"
                                                 onClick={closeMobileMenu}
-                                                className="block w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
+                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
                                             >
                                                 Postavi oglas
                                             </Link>
@@ -226,29 +251,46 @@ const Navbar = () => {
                                         <Link
                                             to="/admin-console"
                                             onClick={closeMobileMenu}
-                                            className="block w-full px-4 py-3 rounded-lg bg-red-500 text-white hover:bg-red-600 transition text-center font-bold"
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-red-500 text-white hover:bg-red-600 transition text-center font-bold"
                                         >
-                                            🛠️ Admin Console
+                                            <Settings size={18} />
+                                            Admin Console
                                         </Link>
                                     )}
 
                                     <Link
                                         to="/profile"
                                         onClick={closeMobileMenu}
-                                        className="block w-full px-4 py-3 rounded-lg bg-slate-200 text-slate-900 hover:bg-slate-300 transition text-center font-semibold"
+                                        className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-slate-200 text-slate-900 hover:bg-slate-300 transition text-center font-semibold"
                                     >
-                                        👤 {user?.firstName || 'Profil'}
+                                        <UserCircle size={18} />
+                                        {user?.firstName || 'Profil'}
                                     </Link>
 
                                     <button
                                         onClick={handleLogout}
-                                        className="block w-full px-4 py-3 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition text-center font-semibold"
+                                        className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition text-center font-semibold"
                                     >
+                                        <LogOut size={18} />
                                         Odjava
                                     </button>
                                 </>
                             ) : (
                                 <>
+                                    <Link
+                                        to="/"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Početna
+                                    </Link>
+                                    <Link
+                                        to="/blog"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Blog
+                                    </Link>
                                     <Link
                                         to="/jobs"
                                         onClick={closeMobileMenu}

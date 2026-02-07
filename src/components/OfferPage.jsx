@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Sparkles, ShieldCheck, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import AuthModal from './AuthModal';
 
 const roles = [
   {
@@ -62,6 +64,8 @@ const perks = [
 const OfferPage = () => {
   const [featuredJobs, setFeaturedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const { user, isAuthenticated, isCompany } = useAuth();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -99,25 +103,38 @@ const OfferPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#0f766e_0%,transparent_55%)] opacity-60" />
         <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl animate-pulse" />
         <div className="absolute top-1/2 left-0 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl animate-pulse" style={{animationDelay: '1s'}} />
-        <div className="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
+        <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-32">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-6xl md:text-8xl font-display font-bold bg-gradient-to-br from-emerald-300 via-emerald-400 to-amber-300 bg-clip-text text-transparent animate-fade-in-up">
+            <div className="inline-block mb-6 animate-fade-in-up">
+              <span className="px-4 py-2 rounded-full bg-emerald-400/20 border border-emerald-400/30 text-emerald-300 text-sm font-semibold uppercase tracking-wider">
+                Platforma za karijeru
+              </span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl md:text-8xl font-display font-bold bg-gradient-to-br from-emerald-300 via-emerald-400 to-amber-300 bg-clip-text text-transparent animate-fade-in-up leading-tight" style={{animationDelay: '0.1s'}}>
               Jobzee
             </h1>
-            <p className="mt-8 text-xl md:text-2xl text-slate-200 font-medium leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+            <p className="mt-6 md:mt-8 text-lg sm:text-xl md:text-2xl text-slate-200 font-medium leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
               Jedna platforma za posao, praksu i prave talente
             </p>
-            <p className="mt-4 text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-              Jobzee spaja studente, alumni i kompanije kroz moderisane oglase, jasne
-              tokove prijava i profile koji govore više od CV-ja.
+            <p className="mt-4 text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+              Spajamo studente, alumni i kompanije kroz moderisane oglase i transparentan proces prijave.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
-              <Link
-                to="/"
-                className="px-8 py-4 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 hover:scale-105 transition-all duration-300 text-lg shadow-lg hover:shadow-emerald-400/50"
-              >
-                Postavi oglas
-              </Link>
+              {isAuthenticated() && (isCompany() || user?.role === 'alumni') ? (
+                <Link
+                  to="/create-job"
+                  className="px-8 py-4 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 hover:scale-105 transition-all duration-300 text-lg shadow-lg hover:shadow-emerald-400/50"
+                >
+                  Postavi oglas
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="px-8 py-4 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 hover:scale-105 transition-all duration-300 text-lg shadow-lg hover:shadow-emerald-400/50"
+                >
+                  Postavi oglas
+                </button>
+              )}
               <Link
                 to="/jobs"
                 className="px-8 py-4 rounded-full border-2 border-white/20 text-white hover:border-emerald-400 hover:bg-emerald-400/10 hover:scale-105 transition-all duration-300 text-lg"
@@ -176,14 +193,32 @@ const OfferPage = () => {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to="/"
-                  className="mt-8 text-center px-5 py-3 rounded-full font-semibold bg-white/10 text-white hover:bg-emerald-300 hover:text-slate-900 transition"
-                >
-                  {role.name === 'Student' && 'Kreni besplatno'}
-                  {role.name === 'Alumni' && 'Uloguj se kao Alumni'}
-                  {role.name === 'Kompanija' && 'Postavi oglas'}
-                </Link>
+                {isAuthenticated() ? (
+                  role.name === 'Kompanija' || role.name === 'Alumni' ? (
+                    <Link
+                      to="/create-job"
+                      className="mt-8 text-center px-5 py-3 rounded-full font-semibold bg-white/10 text-white hover:bg-emerald-300 hover:text-slate-900 transition"
+                    >
+                      Postavi oglas
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/jobs"
+                      className="mt-8 text-center px-5 py-3 rounded-full font-semibold bg-white/10 text-white hover:bg-emerald-300 hover:text-slate-900 transition"
+                    >
+                      Pretraži oglase
+                    </Link>
+                  )
+                ) : (
+                  <button
+                    onClick={() => setAuthModalOpen(true)}
+                    className="mt-8 text-center px-5 py-3 rounded-full font-semibold bg-white/10 text-white hover:bg-emerald-300 hover:text-slate-900 transition w-full"
+                  >
+                    {role.name === 'Student' && 'Kreni besplatno'}
+                    {role.name === 'Alumni' && 'Uloguj se kao Alumni'}
+                    {role.name === 'Kompanija' && 'Postavi oglas'}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -278,6 +313,8 @@ const OfferPage = () => {
           </div>
         </div>
       </section>
+
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 };

@@ -16,32 +16,47 @@ const User = db.User;
  */
 export const register = async (req, res) => {
   try {
+    console.log('📝 Starting registration process...');
     const { firstName, lastName, email, password, role } = req.body;
+
+    console.log('✅ Step 1: Validating input...');
+    if (!firstName || !lastName || !email || !password) {
+      console.log('❌ Missing required fields');
+      return res.status(400).json({
+        success: false,
+        message: 'Sva polja su obavezna'
+      });
+    }
 
     // Validacija dozvoljenih uloga
     const allowedRoles = ['student', 'alumni', 'company', 'admin'];
     if (role && !allowedRoles.includes(role)) {
+      console.log('❌ Invalid role:', role);
       return res.status(400).json({
         success: false,
         message: `Nevažeća uloga. Dozvoljene uloge: ${allowedRoles.join(', ')}`
       });
     }
 
+    console.log('✅ Step 2: Checking if user exists...');
     // Provera da li korisnik već postoji
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
+      console.log('❌ User already exists:', email);
       return res.status(400).json({
         success: false,
         message: 'Korisnik sa ovom email adresom već postoji.'
       });
     }
 
+    console.log('✅ Step 3: Hashing password...');
     // Hash lozinke
     const hashedPassword = hashPassword(password);
 
     // Generisanje email verifikacijskog tokena
     const emailVerificationToken = generateEmailToken();
 
+    console.log('✅ Step 4: Creating user in database...');
     // Kreiranje korisnika
     const newUser = await User.create({
       firstName,
@@ -52,7 +67,9 @@ export const register = async (req, res) => {
       emailVerificationToken,
       emailVerified: false
     });
+    console.log('✅ User created with ID:', newUser.id);
 
+    console.log('✅ Step 5: Creating role-specific profile...');
     // Kreiranje odgovarajućeg profila na osnovu uloge
     if (newUser.role === 'student' || newUser.role === 'alumni') {
       await db.JobSeeker.create({ 
@@ -62,6 +79,7 @@ export const register = async (req, res) => {
         location: null,
         education: []
       });
+      console.log('✅ JobSeeker profile created');
     } else if (newUser.role === 'company') {
       await db.Company.create({
         userId: newUser.id,
@@ -70,22 +88,27 @@ export const register = async (req, res) => {
         industry: null,
         location: null
       });
+      console.log('✅ Company profile created');
     }
 
-    // Slanje verifikacijskog emaila
-    try {
-      await sendVerificationEmail(email, emailVerificationToken, firstName);
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
-      // Nastavljamo sa registracijom čak i ako email ne uspe
-    }
-
+    console.log('✅ Step 6: Generating JWT token...');
     // Generisanje JWT tokena
     const token = generateToken(newUser.id, newUser.email, newUser.role);
 
+    // Slanje verifikacijskog emaila - ASINKRONO (bez čekanja)
+    // Ovo se dešava u pozadini i ne blokira response
+    if (process.env.NODE_ENV === 'production') {
+      sendVerificationEmail(email, emailVerificationToken, firstName).catch((err) => {
+        console.error('⚠️ Email sending failed (non-blocking):', err.message);
+      });
+    } else {
+      console.log('ℹ️ Email verification skipped in development mode');
+    }
+
+    console.log('✅ Registration completed successfully!');
     return res.status(201).json({
       success: true,
-      message: 'Registracija uspešna! Proverite email za verifikaciju.',
+      message: 'Registracija uspešna! Dobrodošli na Jobzee!',
       data: {
         id: newUser.id,
         firstName: newUser.firstName,
@@ -97,11 +120,12 @@ export const register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('❌ Registration error:', error);
+    console.error('Error stack:', error.stack);
     return res.status(500).json({
       success: false,
       message: 'Greška pri registraciji.',
-      error: error.message
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Interno smo napravili grešku'
     });
   }
 };

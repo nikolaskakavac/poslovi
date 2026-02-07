@@ -285,9 +285,16 @@ export default function AuthModal({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-bold py-3 rounded-lg transition disabled:opacity-50"
+              className="w-full bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-bold py-3 rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? 'Učitavanje...' : isLogin ? 'Prijava' : 'Registracija'}
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
+                  <span>{isLogin ? 'Prijava...' : 'Registracija...'}</span>
+                </>
+              ) : (
+                isLogin ? 'Prijava' : 'Registracija'
+              )}
             </button>
           </form>
 

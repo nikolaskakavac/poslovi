@@ -2,6 +2,8 @@
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+console.log('🌐 API URL:', API_URL);
+
 // Helper funkcija za dobijanje tokena
 const getToken = () => {
   return localStorage.getItem('token');
@@ -23,37 +25,68 @@ const getHeaders = (includeAuth = false) => {
   return headers;
 };
 
+// Timeout helper za fetch zahteve
+const fetchWithTimeout = (url, options = {}, timeout = 30000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timeout - Zahtev je trajao previše dugo')), timeout)
+    )
+  ]);
+};
+
 // Helper funkcija za handleovanje response-a
 const handleResponse = async (response) => {
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || 'Došlo je do greške');
+  try {
+    const data = await response.json();
+    
+    if (!response.ok) {
+      console.error('❌ API Error:', data);
+      throw new Error(data.message || `Greška: ${response.status}`);
+    }
+    
+    console.log('✅ API Response OK:', data);
+    return data;
+  } catch (error) {
+    console.error('❌ Response parsing error:', error);
+    throw error;
   }
-  
-  return data;
 };
 
 // ============= AUTH API =============
 export const authAPI = {
   // Registracija
   register: async (userData) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(userData),
-    });
-    return handleResponse(response);
+    console.log('📝 Starting registration request...');
+    try {
+      const response = await fetchWithTimeout(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(userData),
+      }, 30000);
+      console.log('✅ Registration response received');
+      return handleResponse(response);
+    } catch (error) {
+      console.error('❌ Registration error:', error);
+      throw error;
+    }
   },
 
   // Login
   login: async (credentials) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(credentials),
-    });
-    return handleResponse(response);
+    console.log('🔐 Starting login request...');
+    try {
+      const response = await fetchWithTimeout(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(credentials),
+      }, 30000);
+      console.log('✅ Login response received');
+      return handleResponse(response);
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      throw error;
+    }
   },
 
   // Verifikacija emaila

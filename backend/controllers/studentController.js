@@ -129,45 +129,88 @@ export const updateMyProfile = async (req, res) => {
 
 /**
  * Upload profilne slike korisnika (student/alumni)
+ * Pokušava da učuva sliku na fajl sistem, a ako to ne uspe, čuva kao Base64 u bazi
  */
 export const uploadProfilePicture = async (req, res) => {
   try {
     const userId = req.user.id;
 
+    console.log('📸 Profile picture upload started for user:', userId);
+
     if (!req.file) {
+      console.log('❌ No file provided');
       return res.status(400).json({
         success: false,
         message: 'Niste priložili sliku.'
       });
     }
 
+    console.log('📦 File received:', {
+      filename: req.file.filename,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    });
+
     const user = await User.findByPk(userId);
 
     if (!user) {
+      console.log('❌ User not found:', userId);
       return res.status(404).json({
         success: false,
         message: 'Profil nije pronađen.'
       });
     }
 
-    if (user.profilePicture) {
+    // Pokušaj da obriš staru sliku ako postoji
+    if (user.profilePicture && user.profilePicture.startsWith('/uploads/')) {
+      console.log('🗑️ Attempting to delete old profile picture...');
       const oldPath = path.join(__dirname, '..', user.profilePicture);
       deleteFile(oldPath);
     }
 
-    const profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
-    await user.update({ profilePicture });
+    // Provera da li se slika čuva kao put ili kao Base64
+    let profilePictureValue;
+    
+    // Pokušaj da koristiš fajl sistem put
+    if (req.file && req.file.filename) {
+      profilePictureValue = `/uploads/profile-pictures/${req.file.filename}`;
+      console.log('✅ Using file system path:', profilePictureValue);
+    } else if (req.file && req.file.buffer) {
+      // Fallback: koristiš Base64 ako nema filename-a
+      const base64 = req.file.buffer.toString('base64');
+      profilePictureValue = `data:${req.file.mimetype};base64,${base64}`;
+      console.log('📝 Using Base64 encoded image (size:', base64.length, 'chars)');
+    } else {
+      console.log('❌ Invalid file object');
+      return res.status(400).json({
+        success: false,
+        message: 'Greška pri procesiranju slike.'
+      });
+    }
+
+    console.log('💾 Updating user profile in database...');
+    await user.update({ profilePicture: profilePictureValue });
+
+    console.log('✅ Profile picture upload successful for user:', userId);
 
     return res.status(200).json({
       success: true,
       message: 'Profilna slika uspešno ažurirana.',
-      data: { profilePicture }
+      data: { profilePicture: profilePictureValue }
     });
   } catch (error) {
-    console.error('Upload profile picture error:', error);
+    console.error('❌ Upload profile picture error:');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    
     return res.status(500).json({
       success: false,
       message: 'Greška pri uploadu slike.',
+      error: error.message
+    });
+  }
+};
       error: error.message
     });
   }

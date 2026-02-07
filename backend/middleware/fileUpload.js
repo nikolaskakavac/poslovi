@@ -96,10 +96,11 @@ export const uploadCV = multer({
 
 /**
  * Multer middleware za upload profile pictures
+ * Koristi memory storage za Render ephemeral filesystem
  * Limit: 2MB
  */
 export const uploadProfilePicture = multer({
-  storage: profilePicStorage,
+  storage: multer.memoryStorage(), // Use memory storage instead of disk for Render
   fileFilter: imageFileFilter,
   limits: {
     fileSize: 2 * 1024 * 1024 // 2MB

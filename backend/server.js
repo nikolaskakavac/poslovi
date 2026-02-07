@@ -117,9 +117,8 @@ const initDatabase = async () => {
     await db.sequelize.sync({ alter: true });
     console.log('✅ Baza je sinhronizovana!');
 
-    if (process.env.NODE_ENV !== 'production') {
-      await seedDatabase();
-    }
+    // Seed bazu sa test podacima (čak i u production)
+    await seedDatabase();
   } catch (error) {
     console.error('Greška pri konekciji na bazu:');
     console.error(JSON.stringify(error, null, 2));

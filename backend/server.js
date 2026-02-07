@@ -111,17 +111,27 @@ const initDatabase = async () => {
     // Log (bez lozinke)
     const dbUrl = process.env.DATABASE_URL || 'Not set';
     const maskedUrl = dbUrl.replace(/:[^:]*@/, ':***@');
-    console.log('Pokušaj konekcije na:', maskedUrl);
+    console.log('🔍 Pokušaj konekcije na:', maskedUrl);
     
+    console.log('🔐 Authenticating database...');
     await db.sequelize.authenticate();
+    console.log('✅ Database authenticated successfully!');
+    
+    console.log('🔄 Syncing database schema...');
     await db.sequelize.sync({ alter: true });
     console.log('✅ Baza je sinhronizovana!');
 
     // Seed bazu sa test podacima (čak i u production)
+    console.log('🌱 Seeding database with test data...');
     await seedDatabase();
+    console.log('✅ Database seeded successfully!');
   } catch (error) {
-    console.error('Greška pri konekciji na bazu:');
-    console.error(JSON.stringify(error, null, 2));
+    console.error('❌ Greška pri konekciji na bazu:');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    if (error.sql) console.error('SQL:', error.sql);
+    console.error('Stack:', error.stack);
+    console.error('Full object:', JSON.stringify(error, null, 2));
   }
 };
 

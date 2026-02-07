@@ -28,12 +28,19 @@ if (config.use_env_variable) {
   }
   
   const maskedUrl = dbUrl.replace(/:[^:]*@/, ':***@');
-  console.log('Using DATABASE_URL:', maskedUrl);
+  console.log('🔗 Using DATABASE_URL:', maskedUrl);
+  console.log('🔐 Applying SSL config: require=true, rejectUnauthorized=false');
   
-  sequelize = new Sequelize(dbUrl, config);
+  try {
+    sequelize = new Sequelize(dbUrl, config);
+    console.log('✅ Sequelize instance created successfully');
+  } catch (initError) {
+    console.error('❌ Failed to create Sequelize instance:', initError.message);
+    throw initError;
+  }
 } else {
   // Development: use individual params
-  console.log(`Using DB params: ${config.host}:${config.port}/${config.database}`);
+  console.log(`🔗 Using DB params: ${config.host}:${config.port}/${config.database}`);
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 

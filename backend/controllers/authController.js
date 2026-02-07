@@ -114,33 +114,46 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log('🔐 Login attempt for email:', email);
+
     // Pronalaženje korisnika po email-u
+    console.log('📧 Finding user...');
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
+      console.log('❌ User not found:', email);
       return res.status(400).json({
         success: false,
         message: 'Nevažeća email adresa ili lozinka.'
       });
     }
 
+    console.log('✅ User found:', user.id);
+
     // Provera lozinke
+    console.log('🔑 Comparing passwords...');
     const isPasswordValid = comparePassword(password, user.password);
 
     if (!isPasswordValid) {
+      console.log('❌ Invalid password');
       return res.status(400).json({
         success: false,
         message: 'Nevažeća email adresa ili lozinka.'
       });
     }
 
+    console.log('✅ Password valid');
+
     // Provera da li je nalog aktivan
     if (!user.isActive) {
+      console.log('❌ Account inactive');
       return res.status(403).json({
         success: false,
         message: 'Vaš nalog je deaktiviran. Kontaktirajte administratora.'
       });
     }
+
+    console.log('✅ Account is active');
 
     // Upozorenje ako email nije verifikovan (opciono - ne blokira login)
     const emailWarning = !user.emailVerified 
@@ -148,10 +161,14 @@ export const login = async (req, res) => {
       : null;
 
     // Ažuriranje lastLogin vremena
+    console.log('⏰ Updating lastLogin...');
     await user.update({ lastLogin: new Date() });
 
     // Generisanje JWT tokena
+    console.log('🎫 Generating JWT token...');
     const token = generateToken(user.id, user.email, user.role);
+
+    console.log('✅ Login successful for:', email);
 
     return res.status(200).json({
       success: true,
@@ -169,11 +186,18 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('❌ Login error - DETAILED:');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    if (error.sql) console.error('SQL:', error.sql);
+    console.error('Full error object:', JSON.stringify(error, null, 2));
+    
     return res.status(500).json({
       success: false,
       message: 'Greška pri logovanju.',
-      error: error.message
+      error: error.message,
+      errorName: error.name
     });
   }
 };

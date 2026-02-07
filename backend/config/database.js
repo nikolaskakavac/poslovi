@@ -24,7 +24,6 @@ export default {
   production: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    ssl: true,
     native: false,
     logging: false,
     pool: {

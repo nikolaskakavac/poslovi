@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import LandingPage from './components/LandingPage';
 import BlogPage from './components/BlogPage';
 import BlogPostDetail from './components/BlogPostDetail';
 import CompaniesPage from './components/CompaniesPage';
@@ -23,11 +22,10 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<OfferPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:id" element={<BlogPostDetail />} />
         <Route path="/kompanije" element={<CompaniesPage />} />
-        <Route path="/ponuda" element={<OfferPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/jobs" element={<JobListPage />} />
         

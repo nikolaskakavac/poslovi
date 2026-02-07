@@ -31,9 +31,6 @@ const Footer = () => {
               <Link to="/" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Početna</Link>
             </li>
             <li>
-              <Link to="/ponuda" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Ponuda</Link>
-            </li>
-            <li>
               <Link to="/kompanije" className="hover:text-emerald-300 transition-colors duration-300 font-medium">Za kompanije</Link>
             </li>
             <li>

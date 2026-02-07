@@ -98,7 +98,7 @@ const OfferPage = () => {
         <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-28">
           <div className="max-w-3xl">
-            <p className="text-amber-300 font-semibold tracking-widest uppercase text-xs">Ponuda</p>
+            <p className="text-amber-300 font-semibold tracking-widest uppercase text-xs">Početna</p>
             <h1 className="mt-4 text-4xl md:text-6xl font-display font-bold leading-tight">
               Jedna platforma za posao, praksu i prave talente.
             </h1>

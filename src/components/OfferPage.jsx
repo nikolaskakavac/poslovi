@@ -59,65 +59,54 @@ const perks = [
   }
 ];
 
-const featuredOffers = [
-  {
-    company: 'Yettel',
-    title: 'Junior Network Engineer',
-    location: 'Beograd',
-    type: 'Full-time',
-    level: 'Entry'
-  },
-  {
-    company: 'Databricks',
-    title: 'Data Platform Intern',
-    location: 'Remote',
-    type: 'Internship',
-    level: 'Entry'
-  },
-  {
-    company: 'Microsoft',
-    title: 'Cloud Support Engineer',
-    location: 'Novi Sad',
-    type: 'Full-time',
-    level: 'Mid'
-  },
-  {
-    company: 'Microsoft',
-    title: 'Software Engineer Intern',
-    location: 'Beograd',
-    type: 'Internship',
-    level: 'Entry'
-  }
-];
-
 const OfferPage = () => {
+  const [featuredJobs, setFeaturedJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const response = await fetch(`${API_URL}/jobs?limit=4`);
+        const data = await response.json();
+        setFeaturedJobs(data.jobs || []);
+      } catch (error) {
+        console.error('Error fetching featured jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
   return (
     <div className="bg-slate-950 text-white">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#0f766e_0%,transparent_55%)] opacity-60" />
         <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
-        <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-28">
-          <div className="max-w-3xl">
-            <p className="text-amber-300 font-semibold tracking-widest uppercase text-xs">Početna</p>
-            <h1 className="mt-4 text-4xl md:text-6xl font-display font-bold leading-tight">
-              Jedna platforma za posao, praksu i prave talente.
+        <div className="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-6xl md:text-8xl font-display font-bold bg-gradient-to-br from-emerald-300 via-emerald-400 to-amber-300 bg-clip-text text-transparent">
+              Jobzee
             </h1>
-            <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-              Jobzee spaja studente, alumni i kompanije kroz moderisane oglase, jasne
-              tokove prijava i profile koji govore vise od CV-ja.
+            <p className="mt-8 text-xl md:text-2xl text-slate-200 font-medium leading-relaxed">
+              Jedna platforma za posao, praksu i prave talente
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <p className="mt-4 text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
+              Jobzee spaja studente, alumni i kompanije kroz moderisane oglase, jasne
+              tokove prijava i profile koji govore više od CV-ja.
+            </p>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
                 to="/"
-                className="px-6 py-3 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition"
+                className="px-8 py-4 rounded-full bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300 transition text-lg"
               >
                 Postavi oglas
               </Link>
               <Link
                 to="/jobs"
-                className="px-6 py-3 rounded-full border border-white/20 text-white hover:border-white/60 transition"
+                className="px-8 py-4 rounded-full border-2 border-white/20 text-white hover:border-white/60 transition text-lg"
               >
-                Pretrazi oglase
+                Pretraži oglase
               </Link>
             </div>
           </div>
@@ -206,28 +195,38 @@ const OfferPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredOffers.map((offer) => (
-              <div
-                key={`${offer.company}-${offer.title}`}
-                className="rounded-3xl border border-white/10 bg-slate-900/50 p-6 hover:border-emerald-300/60 hover:bg-slate-900/70 transition"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-widest text-emerald-300">{offer.company}</span>
-                  <span className="text-xs text-slate-400">{offer.location}</span>
-                </div>
-                <h3 className="mt-4 text-2xl font-semibold text-white">{offer.title}</h3>
-                <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
-                  <span className="px-3 py-1 rounded-full bg-white/10">{offer.type}</span>
-                  <span className="px-3 py-1 rounded-full bg-white/10">{offer.level}</span>
-                </div>
-                <Link
-                  to="/jobs"
-                  className="mt-6 inline-flex items-center text-emerald-300 hover:text-emerald-200 font-semibold"
-                >
-                  Pogledaj oglas
-                </Link>
+            {loading ? (
+              <div className="col-span-2 text-center py-12 text-slate-400">
+                Učitavanje oglasa...
               </div>
-            ))}
+            ) : featuredJobs.length === 0 ? (
+              <div className="col-span-2 text-center py-12 text-slate-400">
+                Trenutno nema dostupnih oglasa
+              </div>
+            ) : (
+              featuredJobs.map((job) => (
+                <Link
+                  key={job.id}
+                  to={`/jobs/${job.id}`}
+                  className="rounded-3xl border border-white/10 bg-slate-900/50 p-6 hover:border-emerald-300/60 hover:bg-slate-900/70 transition block"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs uppercase tracking-widest text-emerald-300">
+                      {job.Company?.company_name || 'Kompanija'}
+                    </span>
+                    <span className="text-xs text-slate-400">{job.location}</span>
+                  </div>
+                  <h3 className="mt-4 text-2xl font-semibold text-white">{job.title}</h3>
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
+                    <span className="px-3 py-1 rounded-full bg-white/10">{job.type}</span>
+                    <span className="px-3 py-1 rounded-full bg-white/10">{job.experience_level}</span>
+                  </div>
+                  <div className="mt-6 inline-flex items-center text-emerald-300 hover:text-emerald-200 font-semibold">
+                    Pogledaj oglas
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>

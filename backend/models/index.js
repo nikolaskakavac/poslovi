@@ -19,8 +19,18 @@ console.log(`🔍 Loading Sequelize config for: ${env}`);
 let sequelize;
 if (config.use_env_variable) {
   // Production: use DATABASE_URL with full config
-  console.log('Using DATABASE_URL from env');
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  const dbUrl = process.env[config.use_env_variable];
+  
+  if (!dbUrl) {
+    console.error(`❌ ERROR: ${config.use_env_variable} is not set!`);
+    console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('DB') || k.includes('DATABASE')));
+    throw new Error(`Missing required environment variable: ${config.use_env_variable}`);
+  }
+  
+  const maskedUrl = dbUrl.replace(/:[^:]*@/, ':***@');
+  console.log('Using DATABASE_URL:', maskedUrl);
+  
+  sequelize = new Sequelize(dbUrl, config);
 } else {
   // Development: use individual params
   console.log(`Using DB params: ${config.host}:${config.port}/${config.database}`);

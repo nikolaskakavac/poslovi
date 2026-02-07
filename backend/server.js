@@ -1,6 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+
+dotenv.config();
+
+// DEBUG STARTUP
+console.log('🔍 DEBUG STARTUP');
+console.log('NODE_ENV:', `"${process.env.NODE_ENV}"`);
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'SET ✓' : 'MISSING ❌');
+if (process.env.DATABASE_URL) {
+  const masked = process.env.DATABASE_URL.replace(/:[^:]*@/, ':***@');
+  console.log('DB URL:', masked);
+}
+console.log('🔍 END DEBUG\n');
+
 import db from './models/index.js';
 import { seedDatabase } from './migrations/seed.js';
 
@@ -12,8 +25,6 @@ import companyRoutes from './routes/companyRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

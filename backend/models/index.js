@@ -14,12 +14,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const env = process.env.NODE_ENV || 'development';
 const config = databaseConfig[env];
 
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-  host: config.host,
-  port: config.port,
-  dialect: config.dialect,
-  logging: config.logging
-});
+console.log(`🔍 Loading Sequelize config for: ${env}`);
+
+let sequelize;
+if (config.use_env_variable) {
+  // Production: use DATABASE_URL with full config
+  console.log('Using DATABASE_URL from env');
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  // Development: use individual params
+  console.log(`Using DB params: ${config.host}:${config.port}/${config.database}`);
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
 const db = {};
 

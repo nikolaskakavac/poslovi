@@ -28,11 +28,24 @@ export default function AdminConsole() {
   const checkConnections = async () => {
     setLoading(true);
     try {
+      // Get API URL from environment or use default
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const healthCheckUrl = apiBaseUrl.replace('/api', '') + '/api/health';
+      
+      console.log('🔍 Health check URL:', healthCheckUrl);
+      
       // Check Backend + Database via health endpoint
-      const healthCheck = await fetch('http://localhost:5000/api/health').catch(() => null);
+      const healthCheck = await fetch(healthCheckUrl).catch((err) => {
+        console.error('Health check fetch error:', err);
+        return null;
+      });
+      
+      console.log('📊 Health check response:', healthCheck?.status, healthCheck?.statusText);
       
       if (healthCheck?.ok) {
         const healthData = await healthCheck.json();
+        
+        console.log('✅ Health data:', healthData);
         
         setConnections(prev => ({
           ...prev,
@@ -46,6 +59,7 @@ export default function AdminConsole() {
           await fetchAllData();
         }
       } else {
+        console.log('❌ Health check failed:', healthCheck?.status);
         setConnections(prev => ({
           ...prev,
           backend: 'DISCONNECTED ❌',
@@ -68,22 +82,30 @@ export default function AdminConsole() {
 
   const fetchAllData = async () => {
     try {
+      console.log('📥 Fetching admin data...');
+      
       // Try to fetch users via API service
       try {
+        console.log('👥 Fetching users from API...');
         const usersData = await adminAPI.getAllUsers();
+        console.log('✅ Users data received:', usersData);
         const userData = usersData.data?.users || usersData.data || [];
+        console.log('📋 Processed users:', userData);
         setUsers(Array.isArray(userData) ? userData : []);
       } catch (err) {
-        console.log('Cannot fetch users - might need admin access', err.message);
+        console.error('❌ Cannot fetch users:', err.message, err.response?.data || err);
       }
 
       // Try to fetch jobs
       try {
+        console.log('📑 Fetching jobs from API...');
         const jobsData = await jobsAPI.getAll();
+        console.log('✅ Jobs data received:', jobsData);
         const jobsList = jobsData.data || [];
+        console.log('📋 Processed jobs:', jobsList);
         setJobs(Array.isArray(jobsList) ? jobsList : []);
       } catch (err) {
-        console.log('Cannot fetch jobs', err.message);
+        console.error('❌ Cannot fetch jobs:', err.message, err);
       }
     } catch (err) {
       console.error('Error fetching data:', err);

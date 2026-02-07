@@ -315,13 +315,19 @@ export const archiveJob = async (req, res) => {
  */
 export const getAllUsers = async (req, res) => {
   try {
+    console.log('👥 getAllUsers called by user:', req.user?.id, 'role:', req.user?.role);
+
     const { role, isActive, emailVerified, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
+
+    console.log('📋 Query params:', { role, isActive, emailVerified, page, limit, offset });
 
     const whereClause = {};
     if (role) whereClause.role = role;
     if (isActive !== undefined) whereClause.isActive = isActive === 'true';
     if (emailVerified !== undefined) whereClause.emailVerified = emailVerified === 'true';
+
+    console.log('🔍 Where clause:', whereClause);
 
     const { count, rows: users } = await User.findAndCountAll({
       where: whereClause,
@@ -343,6 +349,8 @@ export const getAllUsers = async (req, res) => {
       offset: parseInt(offset)
     });
 
+    console.log('✅ Users found:', count, 'rows returned:', users.length);
+
     return res.status(200).json({
       success: true,
       data: {
@@ -356,7 +364,8 @@ export const getAllUsers = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get all users error:', error);
+    console.error('❌ Get all users error:', error.name, error.message);
+    console.error('Stack:', error.stack);
     return res.status(500).json({
       success: false,
       message: 'Greška pri dohvatanju korisnika.',
@@ -509,10 +518,13 @@ export const reactivateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
+    
+    console.log('🗑️ deleteUser called - Admin:', req.user?.id, 'Target user:', userId);
 
     const user = await User.findByPk(userId);
 
     if (!user) {
+      console.log('❌ User not found:', userId);
       return res.status(404).json({
         success: false,
         message: 'Korisnik nije pronađen.'
@@ -521,20 +533,25 @@ export const deleteUser = async (req, res) => {
 
     // Ne dozvoli brisanje sebe
     if (user.id === req.user.id) {
+      console.log('❌ Admin tried to delete themselves');
       return res.status(400).json({
         success: false,
         message: 'Ne možete obrisati sami sebe.'
       });
     }
 
+    console.log('💾 Destroying user:', user.email);
     await user.destroy();
+
+    console.log('✅ User deleted successfully:', user.email);
 
     return res.status(200).json({
       success: true,
       message: 'Korisnik je uspješno obrisan!'
     });
   } catch (error) {
-    console.error('Delete user error:', error);
+    console.error('❌ Delete user error:', error.name, error.message);
+    console.error('Stack:', error.stack);
     return res.status(500).json({
       success: false,
       message: 'Greška pri brisanju korisnika.',
@@ -549,24 +566,31 @@ export const deleteUser = async (req, res) => {
 export const deleteJobAdmin = async (req, res) => {
   try {
     const { jobId } = req.params;
+    
+    console.log('🗑️ deleteJobAdmin called - Admin:', req.user?.id, 'Target job:', jobId);
 
     const job = await Job.findByPk(jobId);
 
     if (!job) {
+      console.log('❌ Job not found:', jobId);
       return res.status(404).json({
         success: false,
         message: 'Oglas nije pronađen.'
       });
     }
 
+    console.log('💾 Destroying job:', job.title);
     await job.destroy();
+
+    console.log('✅ Job deleted successfully:', job.title);
 
     return res.status(200).json({
       success: true,
       message: 'Oglas je uspješno obrisan!'
     });
   } catch (error) {
-    console.error('Delete job error:', error);
+    console.error('❌ Delete job error:', error.name, error.message);
+    console.error('Stack:', error.stack);
     return res.status(500).json({
       success: false,
       message: 'Greška pri brisanju oglasa.',

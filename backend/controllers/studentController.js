@@ -211,10 +211,6 @@ export const uploadProfilePicture = async (req, res) => {
     });
   }
 };
-      error: error.message
-    });
-  }
-};
 
 /**
  * Upload CV-ja

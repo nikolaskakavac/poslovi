@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import AuthModal from './AuthModal';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [key, setKey] = useState(0);
     const { user, logout, isAuthenticated, isCompany } = useAuth();
 
@@ -15,6 +17,11 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
+        setMobileMenuOpen(false);
+    };
+
+    const closeMobileMenu = () => {
+        setMobileMenuOpen(false);
     };
 
     return (
@@ -31,7 +38,15 @@ const Navbar = () => {
                         <Link to="/blog" className="hover:text-emerald-600 transition-colors">Blog</Link>
                     </nav>
 
-                    <div className="flex items-center gap-3">
+                    {/* Hamburger button - visible only on mobile */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="md:hidden p-2 rounded-lg hover:bg-slate-200 transition"
+                    >
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+
+                    <div className="hidden md:flex items-center gap-3">
                         {isAuthenticated() ? (
                             <>
                                 <Link
@@ -137,6 +152,133 @@ const Navbar = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Mobile Menu */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-200 shadow-lg">
+                        <div className="max-w-[1240px] mx-auto px-4 py-6 space-y-3">
+                            {isAuthenticated() ? (
+                                <>
+                                    <Link
+                                        to="/jobs"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Pretraži oglase
+                                    </Link>
+
+                                    {(user?.role === 'student' || user?.role === 'alumni') && (
+                                        <Link
+                                            to="/my-applications"
+                                            onClick={closeMobileMenu}
+                                            className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                        >
+                                            📨 Moje aplikacije
+                                        </Link>
+                                    )}
+
+                                    {isCompany() && (
+                                        <>
+                                            <Link
+                                                to="/applications"
+                                                onClick={closeMobileMenu}
+                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                            >
+                                                📨 Pregled aplikacija
+                                            </Link>
+                                            <Link
+                                                to="/my-jobs"
+                                                onClick={closeMobileMenu}
+                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                            >
+                                                📋 Moji oglasi
+                                            </Link>
+                                            <Link
+                                                to="/create-job"
+                                                onClick={closeMobileMenu}
+                                                className="block w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
+                                            >
+                                                Postavi oglas
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    {user?.role === 'alumni' && (
+                                        <>
+                                            <Link
+                                                to="/my-jobs"
+                                                onClick={closeMobileMenu}
+                                                className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                            >
+                                                📋 Moji oglasi
+                                            </Link>
+                                            <Link
+                                                to="/create-job"
+                                                onClick={closeMobileMenu}
+                                                className="block w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
+                                            >
+                                                Postavi oglas
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    {user?.role === 'admin' && (
+                                        <Link
+                                            to="/admin-console"
+                                            onClick={closeMobileMenu}
+                                            className="block w-full px-4 py-3 rounded-lg bg-red-500 text-white hover:bg-red-600 transition text-center font-bold"
+                                        >
+                                            🛠️ Admin Console
+                                        </Link>
+                                    )}
+
+                                    <Link
+                                        to="/profile"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg bg-slate-200 text-slate-900 hover:bg-slate-300 transition text-center font-semibold"
+                                    >
+                                        👤 {user?.firstName || 'Profil'}
+                                    </Link>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full px-4 py-3 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition text-center font-semibold"
+                                    >
+                                        Odjava
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/jobs"
+                                        onClick={closeMobileMenu}
+                                        className="block w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition text-center font-semibold"
+                                    >
+                                        Pretraži oglase
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            setAuthModalOpen(true);
+                                            closeMobileMenu();
+                                        }}
+                                        className="block w-full px-4 py-3 rounded-lg bg-emerald-400 text-slate-900 hover:bg-emerald-300 transition text-center font-bold"
+                                    >
+                                        Postavi oglas
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setAuthModalOpen(true);
+                                            closeMobileMenu();
+                                        }}
+                                        className="block w-full px-4 py-3 rounded-lg bg-slate-950 text-white hover:bg-slate-800 transition text-center font-bold"
+                                    >
+                                        Prijava / Registracija
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
             </header>
 
             <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
